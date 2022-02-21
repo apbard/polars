@@ -46,7 +46,7 @@ default-features = false
 features = [
   "dynamic_groupby",
   "zip_with",
-  "simd",
+  # "simd", to be reactivated later 
   "lazy",
   "strings",
   "temporal",
