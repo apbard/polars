@@ -46,7 +46,7 @@ default-features = false
 features = [
   "dynamic_groupby",
   "zip_with",
-  "simd",
+#  "simd", blocked on rust-lang/rust#61486 when using -Z symbol-mangling-version=v0
   "lazy",
   "strings",
   "temporal",
