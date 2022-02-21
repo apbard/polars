@@ -37,8 +37,8 @@ parquet = ["polars/parquet"]
 ipc = ["polars/ipc"]
 is_in = ["polars/is_in"]
 json = ["polars/serde", "serde_json"]
-
-default = ["json", "parquet", "ipc", "is_in", "json", "polars/repeat_by"]
+repeat_by = ["polars/repeat_by"]
+default = ["json", "parquet", "ipc", "is_in", "json", "repeat_by"]
 
 [dependencies.polars]
 path = "../polars"
