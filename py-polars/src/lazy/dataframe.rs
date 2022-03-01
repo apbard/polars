@@ -198,7 +198,6 @@ impl PyLazyFrame {
         cache: bool,
         parallel: bool,
         rechunk: bool,
-        row_count: Option<(String, u32)>,
     ) -> PyResult<Self> {
         Err(PyNotImplementedError::new_err(
             "new_from_parquet needs parquet feature support",
