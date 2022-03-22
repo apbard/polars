@@ -41,8 +41,9 @@ parquet = ["polars/parquet"]
 ipc = ["polars/ipc"]
 is_in = ["polars/is_in"]
 json = ["polars/serde", "serde_json"]
+repeat_by = ["polars/repeat_by"]
 
-default = ["json", "parquet", "ipc", "avro", "is_in", "json", "polars/repeat_by"]
+default = ["json", "parquet", "ipc", "avro", "is_in", "json", "repeat_by"]
 
 [dependencies.polars]
 path = "../polars"
@@ -50,7 +51,7 @@ default-features = false
 features = [
   "dynamic_groupby",
   "zip_with",
-  "simd",
+  #"simd",
   "lazy",
   "strings",
   "temporal",
@@ -113,7 +114,6 @@ name = "polars"
 crate-type = ["cdylib"]
 
 [profile.release]
-strip = true
 codegen-units = 1
 lto = "fat"
 
