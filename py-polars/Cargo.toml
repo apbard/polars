@@ -47,6 +47,7 @@ default = ["json", "parquet", "ipc", "avro", "is_in", "json", "repeat_by"]
 
 [dependencies.polars]
 path = "../polars"
+version = "0.21.1"
 default-features = false
 features = [
   "dynamic_groupby",
