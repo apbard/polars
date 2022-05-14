@@ -51,11 +51,13 @@ use polars_core::export::arrow::io::ipc::read::read_file_metadata;
 use polars_core::prelude::IntoSeries;
 use pyo3::types::{PyBool, PyDict, PyFloat, PyInt, PyString};
 #[cfg(target_os = "linux")]
+#[cfg(feature = "tikv-jemallocator")]
 use tikv_jemallocator::Jemalloc;
 use pyo3::exceptions::PyNotImplementedError;
 
 #[global_allocator]
 #[cfg(target_os = "linux")]
+#[cfg(feature = "tikv-jemallocator")]
 static ALLOC: Jemalloc = Jemalloc;
 
 #[global_allocator]
