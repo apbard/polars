@@ -38,7 +38,7 @@ impl PyFileLikeObject {
             .expect("no read method found");
 
         let bytes: &PyBytes = bytes
-            .cast_as(py)
+            .downcast(py)
             .expect("Expecting to be able to downcast into bytes from read result.");
 
         let buf = bytes.as_bytes().to_vec();
@@ -61,7 +61,7 @@ impl PyFileLikeObject {
             .expect("no read method found");
 
         let ref_bytes: &PyBytes = bytes
-            .cast_as(py)
+            .downcast(py)
             .expect("Expecting to be able to downcast into bytes from read result.");
         let buf = ref_bytes.as_bytes();
 
@@ -129,7 +129,7 @@ impl Read for PyFileLikeObject {
             .map_err(pyerr_to_io_err)?;
 
         let bytes: &PyBytes = bytes
-            .cast_as(py)
+            .downcast(py)
             .expect("Expecting to be able to downcast into bytes from read result.");
 
         buf.write_all(bytes.as_bytes())?;
@@ -203,7 +203,7 @@ pub fn get_either_file(py_f: PyObject, truncate: bool) -> PyResult<EitherRustPyt
     let gil = Python::acquire_gil();
     let py = gil.python();
 
-    if let Ok(pstring) = py_f.cast_as::<PyString>(py) {
+    if let Ok(pstring) = py_f.downcast::<PyString>(py) {
         let rstring = pstring.to_string();
         let str_slice: &str = rstring.borrow();
         let f = if truncate {
@@ -227,9 +227,6 @@ pub fn get_file_like(f: PyObject, truncate: bool) -> PyResult<Box<dyn FileLike>>
 }
 
 pub fn get_mmap_bytes_reader<'a>(py_f: &'a PyAny) -> PyResult<Box<dyn MmapBytesReader + 'a>> {
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-
     // bytes object
     if let Ok(bytes) = py_f.downcast::<PyBytes>() {
         Ok(Box::new(Cursor::new(bytes.as_bytes())))
@@ -252,7 +249,9 @@ pub fn get_mmap_bytes_reader<'a>(py_f: &'a PyAny) -> PyResult<Box<dyn MmapBytesR
         }
         // don't really know what we got here, just read.
         else {
-            let f = PyFileLikeObject::with_requirements(py_f.to_object(py), true, false, true)?;
+            let f = Python::with_gil(|py| {
+                PyFileLikeObject::with_requirements(py_f.to_object(py), true, false, true)
+            })?;
             Ok(Box::new(f))
         }
     // a bytesIO
@@ -262,7 +261,9 @@ pub fn get_mmap_bytes_reader<'a>(py_f: &'a PyAny) -> PyResult<Box<dyn MmapBytesR
     }
     // don't really know what we got here, just read.
     else {
-        let f = PyFileLikeObject::with_requirements(py_f.to_object(py), true, false, true)?;
+        let f = Python::with_gil(|py| {
+            PyFileLikeObject::with_requirements(py_f.to_object(py), true, false, true)
+        })?;
         Ok(Box::new(f))
     }
 }
